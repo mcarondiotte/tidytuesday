@@ -1,0 +1,46 @@
+---
+title: "TidyTuesday 2022/007/05 - SF Rents"
+author: "Mathieu Caron-Diotte"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+```{r prep}
+library(tidyverse)
+```
+
+## Data
+
+```{r data}
+tuesdata <- tidytuesdayR::tt_load('2022-07-05')
+rent <- tuesdata$rent
+permits <- tuesdata$sf_permits
+new_construction <- tuesdata$new_construction
+```
+
+```{r plot}
+rent %>%
+  filter(city == "san francisco") %>%
+  group_by(year) %>%
+  ggplot(aes(x = price)) +
+  geom_histogram() +
+  facet_wrap(. ~ year, ncol = 4, scales = "free") +
+  theme_classic()
+  
+rent %>%
+  filter(city == "san francisco") %>%
+  group_by(year) %>%
+  summarise(price_mad = mad(price), price = median(price)) %>%
+  ggplot(aes(x = year, y = price)) +
+  geom_line(size = 1.5, colour = '#FF4F00') +
+  geom_ribbon(aes(ymin = price - price_mad, ymax = price + price_mad), alpha = 0.25, fill = '#FF4F00') +
+  labs(x = "Year", y = "Rental Price ($US)",
+       title = "Median rent prices in San Francisco, 2000-2018") +
+  theme_classic(base_size = 16) +
+  theme(plot.title = element_text(hjust = 0.5))
+ggsave("2022_27_SFPrices.png", width = 2100, height = 1499, units = 'px')
+```
