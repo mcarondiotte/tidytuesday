@@ -1,5 +1,5 @@
 ---
-title: "TidyTuesday 2022/007/05 - SF Rents"
+title: "TidyTuesday 2022/07/05 - SF Rents"
 author: "Mathieu Caron-Diotte"
 date: "`r Sys.Date()`"
 output: html_document
